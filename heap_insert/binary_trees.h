@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
+#include <string.h>
 
 /**
  * struct binary_tree_s - Binary tree node
@@ -13,35 +14,26 @@
  * @left: Pointer to the left child node
  * @right: Pointer to the right child node
  */
-typedef struct binary_tree_s
+
+struct binary_tree_s
 {
     int n;
     struct binary_tree_s *parent;
     struct binary_tree_s *left;
     struct binary_tree_s *right;
-} binary_tree_t;
+}
 
-/** Binary Search Tree */
-typedef struct binary_tree_s bst_t;
-/** AVL Tree */
-typedef struct binary_tree_s avl_t;
-/** Max Binary Heap */
+typedef struct binary_tree_s binary_tree_t;
 typedef struct binary_tree_s heap_t;
 
-/** Prototypes */
-void binary_tree_print(const binary_tree_t *);
 binary_tree_t *binary_tree_node(binary_tree_t *parent, int value);
-binary_tree_t *binary_tree_insert_left(binary_tree_t *parent, int value);
-binary_tree_t *binary_tree_insert_right(binary_tree_t *parent, int value);
-
-int binary_tree_height(const binary_tree_t *tree);
-void heapify_up(binary_tree_t *node);
-
-binary_tree_t *binary_tree_node(binary_tree_t *parent, int value);
-
-typedef struct binary_tree_s heap_t;
-binary_tree_t *binary_tree_node(binary_tree_t *parent, int value);
+void binary_tree_print(const binary_tree_t *tree);
+int main(void);
 heap_t *heap_insert(heap_t **root, int value);
 size_t binary_tree_size(const binary_tree_t *tree);
+void swap(heap_t **arg_node, heap_t **arg_child);
+int btree_is_perfect(const binary_tree_t *tree);
+int height(const binary_tree_t *tree);
+void update_child_and_node_parents(heap_t *child, heap_t *node, int left_right, heap_t *parent);
 
 #endif
