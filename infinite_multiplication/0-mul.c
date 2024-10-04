@@ -1,89 +1,93 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include <ctype.h>
 
 /**
- * is_digit - checks if a string consists only of digits
- * @s: string to check
+ * _isnumber - checks if string is number
  *
- * Return: 1 if the string is composed only of digits, 0 otherwise
+ * @s: string
+ *
+ * Return: 1 if number, 0 if not
  */
-int is_digit(char *s)
+int _isnumber(char *s)
 {
-	int i;
+	int i, check, d;
 
-	for (i = 0; s[i]; i++)
+	d = 0, check = 1;
+	for (i = 0; *(s + i) != 0; i++)
 	{
-		if (!isdigit(s[i]))
-			return (0);
-	}
-	return (1);
-}
-
-/**
- * multiply - multiplies two numbers represented as strings
- * @num1: first number
- * @num2: second number
- */
-void multiply(char *num1, char *num2)
-{
-	int len_num1 = strlen(num1);
-	int len_num2 = strlen(num2);
-	int len_result = len_num1 + len_num2;
-	int *result = calloc(len_result, sizeof(int));
-	int i, j;
-
-	for (i = len_num1 - 1; i >= 0; i--)
-	{
-		for (j = len_num2 - 1; j >= 0; j--)
+		d = isdigit(*(s + i));
+		if (d == 0)
 		{
-			int mul = (num1[i] - '0') * (num2[j] - '0');
-			int sum = mul + result[i + j + 1];
-
-			result[i + j] += sum / 10;
-			result[i + j + 1] = sum % 10;
+			check = 0;
+			break;
 		}
 	}
-
-	i = 0;
-	while (i < len_result && result[i] == 0)
-		i++;
-
-	if (i == len_result)
-		printf("0");
-	else
-	{
-		while (i < len_result)
-			printf("%d", result[i++]);
-	}
-	printf("\n");
-
-	free(result);
+	return (check);
 }
 
 /**
- * main - multiplies two positive numbers
- * @argc: number of arguments
- * @argv: array of arguments
+ * _callocX - reserves memory initialized to 0
  *
- * Return: 0 if successful, 98 otherwise
+ * @nmemb: # of bytes
+ *
+ * Return: pointer
  */
-int main(int argc, char *argv[])
+char *_callocX(unsigned int nmemb)
 {
-	if (argc != 3)
+	unsigned int i;
+	char *p;
+
+	p = malloc(nmemb + 1);
+	if (p == 0)
+		return (0);
+	for (i = 0; i < nmemb; i++)
+		p[i] = '0';
+	p[i] = '\0';
+	return (p);
+}
+
+/**
+ * main - multiplies inf numbers
+ *
+ * @argc: # of cmd line args
+ * @argv: cmd line args
+ * Return: No return
+ */
+int main(int argc, char **argv)
+{
+	int i, j, l1, l2, lful, mul, add, ten, ten2, tl, zer = 0;
+	char *res;
+
+	if (argc != 3 || _isnumber(argv[1]) == 0 || _isnumber(argv[2]) == 0)
+		printf("Error\n"), exit(98);
+	if (atoi(argv[1]) == 0 || atoi(argv[2]) == 0)
+		printf("0\n"), exit(0);
+	l1 = strlen(argv[1]), l2 = strlen(argv[2]);
+	lful = l1 + l2;
+	res = _callocX(lful);
+	if (res == 0)
+		printf("Error\n"), exit(98);
+	for (i = l2 - 1; i >= 0; i--)
 	{
-		printf("Error\n");
-		return (98);
+		ten = 0, ten2 = 0;
+		for (j = l1 - 1; j >= 0; j--)
+		{
+			tl = i + j + 1;
+			mul = (argv[1][j] - '0') * (argv[2][i] - '0') + ten;
+			ten = mul / 10;
+			add = (res[tl] - '0') + (mul % 10) + ten2;
+			ten2 = add / 10;
+			res[tl] = (add % 10) + '0';
+		}
+		res[tl - 1] = (ten + ten2) + '0';
 	}
-
-	if (!is_digit(argv[1]) || !is_digit(argv[2]))
-	{
-		printf("Error\n");
-		return (98);
-	}
-
-	multiply(argv[1], argv[2]);
-
+	if (res[0] == '0')
+		zer = 1;
+	for (; zer < lful; zer++)
+		printf("%c", res[zer]);
+	printf("\n");
+	free(res);
 	return (0);
 }
